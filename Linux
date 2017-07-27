@@ -1,0 +1,247 @@
+# Linux 的一下常用操作
+
+### 文件管理
+- <font color=red>awk</font>
+
+    ######基本用法
+    用法一:
+    >awk '{[pattern] action}'&ensp;{filenames}&emsp;# 行匹配语句 awk '' 只能用单引号
+    ```
+    awk '{printf "%-8s %-8s %-8s\n",$1,$2,$3}' score.txt
+    ```
+    
+    用法二:
+    >awk -F #-F相当于内置变量FS,制定分隔符
+    
+    
+    用法三:
+    >awk -va=1 '{print $1,%1+a}' log.txt
+    
+    
+    用法四:
+    >awk -f cal.awk score.txt
+    
+    ```
+    AME   NO      MATH ENGLISH COMPUTER TOTAL
+---------------------------------------------
+Marry  2143     78       84       77      239
+Jack   2000     90       29       10      129
+Jay    1994    100       99       96      295
+harry  1922     87       90       27      204
+yann   1293     98       28       38      164
+---------------------------------------------
+  TOTAL:       453      330      248
+AVERAGE:     90.60    66.00    49.60
+```
+
+```
+seq 9 | sed 'H;g' | awk -v RS='' '{for(i=1;i<=NF;i++)printf("%dx%d=%d%s", i, NR, i*NR, i==NR?"\n":"\t")}'
+```
+- find
+
+    语法:
+    >find   path   -option   [   -print ]   [ -exec   -ok   command ]   {} ;
+    
+    -mount, -xdev : 只检查和指定目录在同一个文件系统下的文件，避免列出其它文件系统中的文件
+-amin n : 在过去 n 分钟内被读取过
+-anewer file : 比文件 file 更晚被读取过的文件
+-atime n : 在过去 n 天过读取过的文件
+-cmin n : 在过去 n 分钟内被修改过
+-cnewer file :比文件 file 更新的文件
+-ctime n : 在过去 n 天过修改过的文件
+-empty : 空的文件-gid n or -group name : gid 是 n 或是 group 名称是 name
+-ipath p, -path p : 路径名称符合 p 的文件，ipath 会忽略大小写
+-name name, -iname name : 文件名称符合 name 的文件。iname 会忽略大小写
+-size n : 文件大小 是 n 单位，b 代表 512 位元组的区块，c 表示字元数，k 表示 kilo bytes，w 是二个位元组。-type c : 文件类型是 c 的文件。
+d: 目录
+c: 字型装置文件
+b: 区块装置文件
+p: 具名贮列
+f: 一般文件
+l: 符号连结
+s: socket
+-pid n : process id 是 n 的文件
+你可以使用 ( ) 将运算式分隔，并使用下列运算。
+exp1 -and exp2
+! expr
+-not expr
+exp1 -or exp2
+exp1, exp2
+
+
+
+- <font color=red>cut</font>
+
+    Linux cut命令用于显示每行从开头算起num1 到 num2 的文字。
+
+语法:
+>$ cat /etc/passwd|head -n 5|cut -d : -f 1
+>
+>$ who|cut -b 3-
+
+
+- scp
+- less
+- more
+
+
+### 文档编辑
+- <font color=red>sed </font>
+语法:
+```
+sed [-hnV] [-e<script>] [-f<script文件>][文本文件]
+```
+####动作说明：
+>a ：新增， a 的后面可以接字串，而这些字串会在新的一行出现(目前的下一行)～
+
+>c ：取代， c 的后面可以接字串，这些字串可以取代 n1,n2 之间的行！
+
+>d ：删除，因为是删除啊，所以 d 后面通常不接任何咚咚；
+
+>i ：插入， i 的后面可以接字串，而这些字串会在新的一行出现(目前的上一行)；
+
+>p ：列印，亦即将某个选择的数据印出。通常 p 会与参数 sed -n 一起运行～
+
+>s ：取代，可以直接进行取代的工作哩！通常这个 s 的动作可以搭配正规表示法！例如 1,20s/old/new/g 就是啦！
+
+- let
+
+
+- <font color=red>sort</font>
+
+- grep
+
+
+- wc
+
+
+- expr
+
+
+### 系统管理
+- last -n 5 -R
+
+- finger
+
+    Linux finger命令可以让使用者查询一些其他使用者的资料。
+
+- kill
+
+ -l <信息编号> 　若不加<信息编号>选项，则-l参数会列出全部的信息名  称。
+ 
+    Linux kill命令用于删除执行中的程序或工作。
+kill可将指定的信息送至程序。预设的信息为SIGTERM(15)，可将指定程序终止。若仍无法终止该程序，可使用SIGKILL(9)信息尝试强制删除程序。程序或工作的编号可利用ps指令或jobs指令查看。
+
+- ps
+
+    Linux ps命令用于显示当前进程 (process) 的状态。
+    A 列出所有的行程
+-w 显示加宽可以显示较多的资讯
+-au 显示较详细的资讯
+-aux 显示所有包含其他使用者的行程
+au(x) 输出格式 :
+USER PID %CPU %MEM VSZ RSS TTY STAT START TIME COMMAND
+USER: 行程拥有者
+PID: pid
+%CPU: 占用的 CPU 使用率
+%MEM: 占用的记忆体使用率
+VSZ: 占用的虚拟记忆体大小
+RSS: 占用的记忆体大小
+TTY: 终端的次要装置号码 (minor device number of tty)
+STAT: 该行程的状态:
+D: 不可中断的静止 (通悸□□缜b进行 I/O 动作)
+R: 正在执行中
+S: 静止状态
+T: 暂停执行
+Z: 不存在但暂时无法消除
+W: 没有足够的记忆体分页可分配
+<: 高优先序的行程
+N: 低优先序的行程
+L: 有记忆体分页分配并锁在记忆体内 (实时系统或捱A I/O)
+START: 行程开始时间
+TIME: 执行的时间
+COMMAND:所执行的指令
+
+- free 
+
+    Linux free命令用于显示内存状态。
+    -b 　以Byte为单位显示内存使用情况。
+-k 　以KB为单位显示内存使用情况。
+-m 　以MB为单位显示内存使用情况。
+-o 　不显示缓冲区调节列。
+-s<间隔秒数> 　持续观察内存使用状况。
+-t 　显示内存总和列。
+-V 　显示版本信息。
+
+
+### 系统设置
+
+
+### 磁盘管理
+- df
+
+    显示目前在Linux系统上的文件系统的磁盘使用情况统计
+-h 使用人类可读的格式(G M K)
+-H 单位1000不是1024
+-k --block-size=1024
+-m 兆
+
+- du
+
+    Linux du命令用于显示目录或文件的大小。
+du会显示指定的目录或文件所占用的磁盘空间。
+
+- mount
+
+    -a 将/etc/fstab 重定义的所有档案系统挂上
+-f 通常用在出错的用途,和-v 一起使用
+-o ro 唯读模式挂上
+-o rw 可读写模式挂上
+-o loop 使用 loop 模式用来将一个档案当成硬盘分割挂上系统。
+
+    Linux mount命令是经常会使用到的命令，它用于挂载Linux系统外的文件。
+##### 实例
+    将 /dev/hda1 挂在 /mnt 之下。
+
+    ```
+$ mount /dev/hdal /mnt
+```
+    将/tmp/image.iso 这个光碟的 image 档使用 loop 模式挂在 /mnt/cdrom之下。用这种方法可以将一般网络上可以找到的 Linux 光 碟 ISO 档在不烧录成光碟的情况下检视其内容。
+    ```
+$ mount -o loop /tmp/image.iso /mnt/cdrom
+```
+
+- stat  stat [文件或目录]
+
+    显示文件的iNode内容
+
+### 磁盘维护
+### 备份压缩
+- tar
+
+    Linux tar命令用于备份文件。
+tar是用来建立，还原备份文件的工具程序，它可以加入，解开备份文件内的文件。
+
+    压缩文件 非打包
+    ```
+$ touch a.c       
+$ tar -czvf test.tar.gz a.c   //压缩 a.c文件为test.tar.gz
+a.c
+```
+    解压文件
+    ```
+$ tar -xzvf test.tar.gz a.c
+```
+### 网络通信
+- netstat
+
+
+    利用netstat指令可让你得知整个Linux系统的网络情况。
+    ```
+    netstat -ano 查看端口情况
+    ```
+    
+
+
+
+
